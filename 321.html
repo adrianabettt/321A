@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complete a Tabela - Escola Alegria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --board:#1F4F42;
+    --board-dark:#173C33;
+    --paper:#FFFCF4;
+    --paper-line:#E4DCC4;
+    --ink:#2B2A25;
+    --ink-soft:#5B5A4F;
+    --yellow:#FFC93C;
+    --yellow-dark:#B5820A;
+    --coral:#FF6B5B;
+    --coral-dark:#B33A2C;
+    --blue:#4EA8DE;
+    --blue-dark:#1D6C9C;
+    --green:#6FCF97;
+    --green-dark:#217A4B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Nunito', sans-serif;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(255,255,255,0.03) 0, transparent 40%),
+      var(--board);
+    color:var(--ink);
+    min-height:100vh;
+    padding:28px 14px 60px;
+  }
+  .wrap{max-width:900px;margin:0 auto;}
+
+  .chalk-header{
+    text-align:center;
+    color:#F4F1E4;
+    margin-bottom:22px;
+  }
+  .chalk-eyebrow{
+    font-family:'Nunito',sans-serif;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:12.5px;
+    color:var(--yellow);
+    margin:0 0 6px;
+  }
+  .chalk-title{
+    font-family:'Baloo 2', cursive;
+    font-weight:800;
+    font-size:clamp(28px,5vw,42px);
+    margin:0 0 8px;
+    text-shadow:0 2px 0 rgba(0,0,0,0.15);
+  }
+  .chalk-sub{
+    font-size:15px;
+    color:#D9E4DD;
+    max-width:560px;
+    margin:0 auto;
+    line-height:1.5;
+  }
+
+  .notebook{
+    position:relative;
+    background:var(--paper);
+    border-radius:18px;
+    padding:30px 26px 26px 54px;
+    box-shadow:0 14px 0 rgba(0,0,0,0.18);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 37px,
+        var(--paper-line) 38px
+    );
+    background-position: 0 92px;
+  }
+  .notebook::before{
+    content:"";
+    position:absolute;
+    left:22px; top:0; bottom:0;
+    width:2px;
+    background:var(--coral);
+    opacity:.55;
+  }
+  .spiral{
+    position:absolute;
+    left:-13px; top:16px; bottom:16px;
+    width:26px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .spiral span{
+    display:block;
+    width:26px;height:26px;
+    border-radius:50%;
+    background:var(--board-dark);
+    border:4px solid var(--paper);
+  }
+
+  .lesson-recap{
+    font-size:14.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+    margin:0 0 22px;
+    padding-bottom:18px;
+    border-bottom:2px dashed var(--paper-line);
+  }
+  .lesson-recap b{color:var(--ink);}
+  .lesson-recap .tag{
+    display:inline-block;
+    background:var(--yellow);
+    color:#4A3600;
+    font-weight:800;
+    font-size:12px;
+    padding:2px 9px;
+    border-radius:6px;
+    margin-right:6px;
+  }
+
+  .mission{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+  }
+  .mission h2{
+    font-family:'Baloo 2', cursive;
+    font-size:22px;
+    margin:0;
+    color:var(--coral-dark);
+  }
+  .scoreboard{
+    margin-left:auto;
+    background:var(--board);
+    color:#F4F1E4;
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:16px;
+    padding:8px 16px;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .scoreboard .star{color:var(--yellow);}
+
+  .table-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px;}
+
+  table.game{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    min-width:560px;
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    border:2px solid var(--board);
+  }
+  table.game thead th{
+    background:var(--board);
+    color:#F4F1E4;
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:15px;
+    padding:12px 10px;
+    text-align:left;
+  }
+  table.game thead th small{
+    display:block;
+    font-family:'Nunito',sans-serif;
+    font-weight:600;
+    font-size:10.5px;
+    color:var(--yellow);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-top:2px;
+  }
+  table.game td{
+    padding:10px;
+    font-size:15px;
+    border-bottom:1px solid var(--paper-line);
+    vertical-align:middle;
+  }
+  table.game tr:last-child td{border-bottom:none;}
+  table.game tr:nth-child(even) td{background:#FBF8ED;}
+
+  .filled{
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .blank-cell{position:relative;}
+  .blank-btn{
+    width:100%;
+    min-height:38px;
+    border:2px dashed var(--blue);
+    background:#EAF5FC;
+    color:var(--blue-dark);
+    font-weight:800;
+    font-family:'Baloo 2', cursive;
+    font-size:16px;
+    border-radius:9px;
+    cursor:pointer;
+    padding:6px 8px;
+  }
+  .blank-btn:hover{background:#DBEEFA;}
+  .blank-btn:focus-visible{outline:3px solid var(--yellow); outline-offset:2px;}
+
+  .options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    justify-content:flex-start;
+  }
+  .opt{
+    border:2px solid var(--board);
+    background:#fff;
+    color:var(--ink);
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    font-size:14px;
+    padding:6px 10px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .opt:hover{background:#F3F0DF;}
+  .opt:focus-visible{outline:3px solid var(--yellow); outline-offset:2px;}
+
+  .result-correct{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-weight:800;
+    color:var(--green-dark);
+    font-family:'Baloo 2', cursive;
+    font-size:16px;
+  }
+  .stamp{
+    display:inline-block;
+    border:2.5px solid var(--green-dark);
+    color:var(--green-dark);
+    border-radius:8px;
+    padding:1px 8px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    transform:rotate(-6deg);
+  }
+
+  .shake{animation:shake .38s;}
+  @keyframes shake{
+    10%,90%{transform:translateX(-2px);}
+    20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-6px);}
+    40%,60%{transform:translateX(6px);}
+  }
+  .feedback-wrong{
+    display:none;
+    margin-top:6px;
+    font-size:12.5px;
+    color:var(--coral-dark);
+    font-weight:700;
+    line-height:1.3;
+  }
+
+  .footer-message{
+    display:none;
+    margin-top:22px;
+    padding:16px 18px;
+    background:#EAF6EE;
+    border:2px solid var(--green);
+    border-radius:12px;
+    text-align:center;
+  }
+  .footer-message h3{
+    font-family:'Baloo 2', cursive;
+    color:var(--green-dark);
+    margin:0 0 4px;
+    font-size:20px;
+  }
+  .footer-message p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+  .again-btn{
+    margin-top:12px;
+    background:var(--yellow);
+    color:#4A3600;
+    border:none;
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:15px;
+    padding:9px 20px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .again-btn:hover{background:#FFD65C;}
+
+  .credits{
+    text-align:center;
+    margin-top:26px;
+    padding-top:14px;
+    font-size:12.5px;
+    color:#C9D3CC;
+    letter-spacing:.02em;
+  }
+
+  .score-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(23,60,51,0.72);
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:999;
+  }
+  .score-overlay.show{display:flex;}
+  .score-card{
+    width:100%;
+    max-width:340px;
+    border-radius:18px;
+    padding:28px 24px 24px;
+    text-align:center;
+    font-family:'Nunito', sans-serif;
+    box-shadow:0 16px 0 rgba(0,0,0,0.18);
+    border:3px solid rgba(0,0,0,0.12);
+  }
+  .score-card.top{background:linear-gradient(180deg,#EAF6EE,#DDF0E4); border-color:var(--green-dark);}
+  .score-card.mid{background:linear-gradient(180deg,#FFF6DE,#FFEDBB); border-color:var(--yellow-dark);}
+  .score-card.low{background:linear-gradient(180deg,#FDEAE7,#FBD9D3); border-color:var(--coral-dark);}
+  .score-emoji{font-size:40px; line-height:1; margin-bottom:6px;}
+  .score-label{
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin:0 0 4px;
+  }
+  .score-card.top .score-label{color:var(--green-dark);}
+  .score-card.mid .score-label{color:var(--yellow-dark);}
+  .score-card.low .score-label{color:var(--coral-dark);}
+  .score-value{
+    font-family:'Baloo 2', cursive;
+    font-weight:800;
+    font-size:56px;
+    line-height:1;
+    margin:4px 0 6px;
+    color:var(--ink);
+  }
+  .score-value span{font-size:22px; color:var(--ink-soft); font-weight:700;}
+  .score-msg{
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:0 0 18px;
+  }
+  .score-close{
+    background:var(--board);
+    color:#F4F1E4;
+    border:none;
+    font-family:'Baloo 2', cursive;
+    font-weight:700;
+    font-size:15px;
+    padding:10px 26px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+  .score-close:hover{background:var(--board-dark);}
+
+  @media (max-width:520px){
+    .notebook{padding:24px 16px 20px 44px;}
+    .spiral{left:-11px;}
+    table.game{min-width:520px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="chalk-header">
+    <p class="chalk-eyebrow">3º ano · Habilidade EF03CO05</p>
+    <h1 class="chalk-title">Complete a tabela da Escola Alegria</h1>
+    <p class="chalk-sub">Alguns dados dos alunos fugiram da tabela! Escolha, para cada espaço vazio, a opção que tem o tipo de dado certo para aquela coluna.</p>
+  </header>
+
+  <main class="notebook">
+    <div class="spiral" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <p class="lesson-recap">
+      <span class="tag">Lembrete</span>
+      Uma <b>tabela</b> organiza dados em <b>linhas</b> e <b>colunas</b>. Cada coluna guarda sempre o mesmo tipo de dado: por exemplo, a coluna <b>Idade</b> só recebe números, e a coluna <b>Nome</b> só recebe texto. Se um dado for colocado na coluna errada, a tabela fica bagunçada!
+    </p>
+
+    <div class="mission">
+      <h2>🧩 Sua missão</h2>
+      <div class="scoreboard"><span class="star">★</span><span id="score-text">0 de 5 encontrados</span></div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="game" id="game-table">
+        <thead>
+          <tr>
+            <th>Nome<small>texto</small></th>
+            <th>Idade<small>número</small></th>
+            <th>Turma<small>texto</small></th>
+            <th>Nota<small>número</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="filled">Beatriz</td>
+            <td class="blank-cell" data-answer="8" data-options='["8","3B","Rafael"]'></td>
+            <td class="filled">3A</td>
+            <td class="filled">9,0</td>
+          </tr>
+          <tr>
+            <td class="blank-cell" data-answer="Gustavo" data-options='["Gustavo","9","3A"]'></td>
+            <td class="filled">9</td>
+            <td class="filled">3A</td>
+            <td class="filled">8,5</td>
+          </tr>
+          <tr>
+            <td class="filled">Rafael</td>
+            <td class="filled">8</td>
+            <td class="blank-cell" data-answer="3A" data-options='["3A","7,0","oito"]'></td>
+            <td class="filled">7,0</td>
+          </tr>
+          <tr>
+            <td class="filled">Camila</td>
+            <td class="filled">9</td>
+            <td class="filled">3B</td>
+            <td class="blank-cell" data-answer="10,0" data-options='["10,0","Camila","3B"]'></td>
+          </tr>
+          <tr>
+            <td class="filled">Diego</td>
+            <td class="blank-cell" data-answer="7" data-options='["7","Diego","3A"]'></td>
+            <td class="filled">3A</td>
+            <td class="filled">6,0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-message" id="footer-message">
+      <h3>🏆 Tabela completa!</h3>
+      <p>Você encontrou o lugar certo para cada dado. Nome e turma são textos, idade e nota são números — cada um mora na coluna certa!</p>
+      <button class="again-btn" id="again-btn" type="button">Jogar de novo</button>
+    </div>
+  </main>
+
+  <p class="credits">Atividade pedagógica - Profº Adriana Bett Terebinto</p>
+</div>
+
+<div class="score-overlay" id="score-overlay">
+  <div class="score-card" id="score-card">
+    <div class="score-emoji" id="score-emoji">🏆</div>
+    <p class="score-label">Sua pontuação</p>
+    <p class="score-value" id="score-value">10<span>/10</span></p>
+    <p class="score-msg" id="score-msg">Você completou a tabela!</p>
+    <button class="score-close" id="score-close" type="button">Fechar</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var total = 0;
+  var correctCount = 0;
+  var wrongAttempts = 0;
+  var scoreText = document.getElementById('score-text');
+  var footerMessage = document.getElementById('footer-message');
+  var againBtn = document.getElementById('again-btn');
+  var scoreOverlay = document.getElementById('score-overlay');
+  var scoreCard = document.getElementById('score-card');
+  var scoreEmoji = document.getElementById('score-emoji');
+  var scoreValue = document.getElementById('score-value');
+  var scoreMsg = document.getElementById('score-msg');
+  var scoreClose = document.getElementById('score-close');
+
+  function showScoreAlert(){
+    var points = Math.max(0, 10 - wrongAttempts);
+    scoreValue.innerHTML = points + '<span>/10</span>';
+    scoreCard.classList.remove('top','mid','low');
+    if(points >= 8){
+      scoreCard.classList.add('top');
+      scoreEmoji.textContent = '🏆';
+      scoreMsg.textContent = 'Show de bola! Você entendeu direitinho como os dados se organizam nas colunas certas.';
+    } else if(points >= 5){
+      scoreCard.classList.add('mid');
+      scoreEmoji.textContent = '⭐';
+      scoreMsg.textContent = 'Muito bem! Alguns dados quase foram parar na coluna errada. Vale revisar os tipos de dado.';
+    } else {
+      scoreCard.classList.add('low');
+      scoreEmoji.textContent = '💪';
+      scoreMsg.textContent = 'Você completou a tabela! Que tal jogar de novo para acertar de primeira?';
+    }
+    scoreOverlay.classList.add('show');
+  }
+
+  scoreClose.addEventListener('click', function(){
+    scoreOverlay.classList.remove('show');
+  });
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function updateScore(){
+    scoreText.textContent = correctCount + ' de ' + total + ' encontrados';
+    if(correctCount === total){
+      footerMessage.style.display = 'block';
+      footerMessage.scrollIntoView({behavior:'smooth', block:'nearest'});
+      setTimeout(showScoreAlert, 450);
+    }
+  }
+
+  function buildCell(cell){
+    var answer = cell.getAttribute('data-answer');
+    var options = shuffle(JSON.parse(cell.getAttribute('data-options')));
+
+    var blankBtn = document.createElement('button');
+    blankBtn.type = 'button';
+    blankBtn.className = 'blank-btn';
+    blankBtn.textContent = '?';
+    blankBtn.setAttribute('aria-label', 'Espaço vazio, toque para escolher a resposta');
+
+    var optionsBox = document.createElement('div');
+    optionsBox.className = 'options';
+    optionsBox.style.display = 'none';
+
+    var feedback = document.createElement('div');
+    feedback.className = 'feedback-wrong';
+    feedback.textContent = 'Ops! Esse dado não combina com esta coluna. Tente outra opção.';
+
+    options.forEach(function(opt){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.textContent = opt;
+      b.addEventListener('click', function(){
+        if(opt === answer){
+          cell.innerHTML = '';
+          var wrap = document.createElement('span');
+          wrap.className = 'result-correct';
+          wrap.innerHTML = answer + ' <span class="stamp">certo</span>';
+          cell.appendChild(wrap);
+          correctCount++;
+          updateScore();
+        } else {
+          wrongAttempts++;
+          feedback.style.display = 'block';
+          optionsBox.classList.add('shake');
+          setTimeout(function(){ optionsBox.classList.remove('shake'); }, 400);
+        }
+      });
+      optionsBox.appendChild(b);
+    });
+
+    blankBtn.addEventListener('click', function(){
+      var isOpen = optionsBox.style.display === 'flex';
+      optionsBox.style.display = isOpen ? 'none' : 'flex';
+    });
+
+    cell.innerHTML = '';
+    cell.appendChild(blankBtn);
+    cell.appendChild(optionsBox);
+    cell.appendChild(feedback);
+  }
+
+  function init(){
+    correctCount = 0;
+    wrongAttempts = 0;
+    footerMessage.style.display = 'none';
+    scoreOverlay.classList.remove('show');
+    var cells = document.querySelectorAll('.blank-cell');
+    total = cells.length;
+    cells.forEach(buildCell);
+    updateScore();
+  }
+
+  againBtn.addEventListener('click', init);
+  init();
+})();
+</script>
+</body>
+</html>
